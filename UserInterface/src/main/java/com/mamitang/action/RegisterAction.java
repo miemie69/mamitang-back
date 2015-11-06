@@ -12,9 +12,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 /**
+ * 注册Action
  * Created by lyy on 15-9-23.
  */
-
 @Controller
 @RequestMapping(value = "/userinfo")
 public class RegisterAction {
@@ -22,7 +22,7 @@ public class RegisterAction {
     @Autowired
     private IUserService userService;
 
-    @RequestMapping(value = "/register" , method = RequestMethod.POST)
+    @RequestMapping(value = "register" , method = RequestMethod.POST)
     @ResponseBody
     public RetResponse register(@RequestBody String paraminfo){
         RetResponse result = new RetResponse();

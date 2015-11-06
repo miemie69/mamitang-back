@@ -22,35 +22,36 @@ import java.util.Map;
  */
 @Service("foodService")
 public class FoodServiceImpl implements IFoodService {
+
     @Autowired
     FoodEntityMapper foodDao;
     @Autowired
     HallEntityMapper hallDao;
 
-    public RetResponse getAdvertisementDetail(int id) {
+    public RetResponse getFoodDetail(int id) {
         RetResponse result = new RetResponse();
         if (id < 0) {
             result.setStatus(ReturnStatus.FAIL);
-            result.setRetMsg("the parameter id is invalid");
+            result.setRetMsg("菜品id值无效");
             return result;
         }
         //获取指定id的FoodEntity
         FoodEntity foodEntity = foodDao.selectByPrimaryKey(id);
         if (foodEntity == null) {
             result.setStatus(ReturnStatus.FAIL);
-            result.setRetMsg("the food is not existed");
+            result.setRetMsg("该菜品不存在");
             return result;
         }
         //根据hid获取堂信息
         HallEntity hallEntity = hallDao.selectByPrimaryKey(foodEntity.getHid());
         if (hallEntity == null) {
             result.setStatus(ReturnStatus.FAIL);
-            result.setRetMsg("the hall is not existed");
+            result.setRetMsg("该堂不存在");
             return result;
         }
         //代表菜品详情页的实体
         FoodDetail detail = new FoodDetail();
-        //field start
+        //字段赋值开始
         detail.setFoodName(foodEntity.getFoodName());
         detail.setHallName(hallEntity.getHallName());
         detail.setFoodState(foodEntity.getFoodState());
@@ -64,7 +65,7 @@ public class FoodServiceImpl implements IFoodService {
         detail.setFoodSupplyNum(foodEntity.getFoodSupplyNum());
         detail.setFoodPictureUrl(foodEntity.getFoodPictureUrl());
         detail.setFoodIntroduce(foodEntity.getFoodIntroduce());
-        //field end
+        //字段赋值结束
         result.setData(detail);
         result.setStatus(ReturnStatus.SUCCESS);
         return result;
@@ -80,7 +81,7 @@ public class FoodServiceImpl implements IFoodService {
     public RetResponse getFoodList(int page, int numOfPage, String querykey, String queryvalue , Date start_time , Date end_time){
         RetResponse result = new RetResponse();
         if (page <= 0 || numOfPage < 1) {
-            result.setRetMsg("the error paging parameters");
+            result.setRetMsg("页码参数错误");
             result.setStatus(ReturnStatus.FAIL);
             return result;
         }
@@ -107,7 +108,7 @@ public class FoodServiceImpl implements IFoodService {
         }else {
             sql_map.put("queryvalue" , queryvalue);
         }
-        //query by time
+        //根据时间条件查询
         sql_map.put("starttime" , start_time);
         sql_map.put("endtime" , end_time);
 
@@ -122,21 +123,21 @@ public class FoodServiceImpl implements IFoodService {
         Map result_map = new HashMap();
         result_map.put("countOfPage", countOfPage);
         result_map.put("currentList", list);
-
         result.setData(result_map);
         result.setStatus(ReturnStatus.SUCCESS);
         return result;
     }
 
-    public RetResponse updateAdvertisement(int id, FoodUpdateRequest request_info) {
+    public RetResponse updateFood(int id, FoodUpdateRequest request_info) {
         RetResponse result = new RetResponse();
+        int effectRow;
         if(id<0){
             result.setStatus(ReturnStatus.FAIL);
-            result.setRetMsg("the parameter id is invalid");
+            result.setRetMsg("菜品id值无效");
             return result;
         }
         FoodEntity new_food = new FoodEntity();
-        //field start
+        //字段赋值开始
         new_food.setId(id);
         new_food.setFoodName(request_info.getFoodName());
         new_food.setFoodState(request_info.getFoodState());
@@ -148,18 +149,17 @@ public class FoodServiceImpl implements IFoodService {
         new_food.setFoodSupplyNum(request_info.getFoodSupplyNum());
         new_food.setFoodPictureUrl(request_info.getFoodPictureUrl());
         new_food.setFoodIntroduce(request_info.getFoodIntroduce());
-        //field end
-        int i = foodDao.updateByPrimaryKeySelective(new_food);
-        if(i<0){
-            result.setRetMsg("更新失败");
+        //字段赋值结束
+        effectRow = foodDao.updateByPrimaryKeySelective(new_food);
+        if(effectRow<0){
+            result.setRetMsg("菜品更新失败");
             result.setStatus(ReturnStatus.FAIL);
             return result;
         }
         result.setStatus(ReturnStatus.SUCCESS);
-        result.setRetMsg("更新成功");
+        result.setRetMsg("菜品更新成功");
         return result;
     }
-
 
 }
 

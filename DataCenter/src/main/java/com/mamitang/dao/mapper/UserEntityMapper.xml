@@ -40,7 +40,7 @@
     WHERE username = #{username,jdbcType=VARCHAR}
   </select>
 
-  <!--query all users with paging
+  <!--分页查询所有用户
     note:The column special_dish and nickname are just for test the function of the sql-->
   <select id="getAllUsers" resultMap="BaseResultMap" parameterType="java.util.Map">
     SELECT
@@ -52,7 +52,14 @@
     ORDER BY id LIMIT #{start} , #{end}
   </select>
 
-  <!--get count of all users-->
+  <!--根据用户id查询用户名-->
+  <select id="getUserNameById" resultMap="java.lang.String" parameterType="java.lang.Integer">
+    SELECT
+    username
+    FROM  tb_user
+    WHERE id = #{id,jdbcType=INTEGER}
+  </select>
+
   <select id="getAllUsersCount" resultType="java.lang.Integer">
     SELECT
     COUNT(*)

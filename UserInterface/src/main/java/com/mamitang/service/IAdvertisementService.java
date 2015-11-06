@@ -12,7 +12,6 @@ public interface IAdvertisementService {
 
     RetResponse addAdvertisement(AdvertisementAddRequest request);
 
-    //show the detail of an advertisement which it's id is parameter
     RetResponse getAdvertisementDetail(int id);
 
     RetResponse getAdvertisementList(int page, int numOfPage, String name, Date starttime, Date endtime);

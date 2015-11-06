@@ -20,10 +20,8 @@ public interface AdvertisementEntityMapper {
 
     int updateByPrimaryKey(AdvertisementEntity record);
 
-    //insert the record and return the primary key
     int insertAndGetId(AdvertisementEntity record);
 
-    //get the count of all advertisements
     int getAllAdvertisementsCount();
 
     List<AdvertisementEntity> getAllAdvertisements(Map sql_map);

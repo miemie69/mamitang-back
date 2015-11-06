@@ -10,9 +10,9 @@ import java.util.Date;
  */
 public interface IFoodService {
 
-    RetResponse getAdvertisementDetail(int id);
+    RetResponse getFoodDetail(int id);
 
     RetResponse getFoodList(int page, int numOfPage, String querykey, String queryvalue , Date start_time, Date end_time);
 
-    RetResponse updateAdvertisement(int id, FoodUpdateRequest request_info);
+    RetResponse updateFood(int id, FoodUpdateRequest request_info);
 }

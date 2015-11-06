@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * 登录controller
+ * 登录Action
  * Created by wyp on 15-7-13.
  */
 @RestController
@@ -24,7 +24,6 @@ public class LoginAction {
 
     @Autowired
     private IUserService userService;
-
 
     @RequestMapping(value = "login/{userName}", method = RequestMethod.GET)
     @ResponseBody

@@ -17,14 +17,13 @@
     where id = #{id,jdbcType=INTEGER}
   </select>
 
-  <!--get the count of all advertisements    lyy-->
   <select id="getAllAdvertisementsCount" resultType="java.lang.Integer">
     SELECT
     COUNT(*)
     FROM tb_advertisement
   </select>
 
-  <!--query all users with paging   &lt; <  &gt; >-->
+  <!--分页查询所有广告   &lt; <  &gt; >-->
   <select id="getAllAdvertisements" resultMap="BaseResultMap" parameterType="java.util.Map">
     SELECT
     <include refid="Base_Column_List" />
@@ -52,7 +51,7 @@
       #{isenable,jdbcType=TINYINT})
   </insert>
 
-  <!--insert Entity and return the primary key   lyy-->
+  <!--插入实体并返回该实体主键-->
   <insert id="insertAndGetId" useGeneratedKeys="true" keyProperty="id" parameterType="com.mamitang.entity.AdvertisementEntity" >
     insert into tb_advertisement (name, publishtime,
     isenable)

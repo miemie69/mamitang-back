@@ -11,10 +11,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
+ * 堂管理Action
  * Created by lyy on 11/2/15.
- * hall management
  */
-
 @RestController
 @RequestMapping("/hallinfo")
 public class HallAction {
@@ -23,7 +22,7 @@ public class HallAction {
     IHallService hallService;
 
     /**
-     * show the detail of a hall by the parameter id
+     * 根据id查询堂详情页
      * @param id
      * @return
      */
@@ -41,7 +40,7 @@ public class HallAction {
     }
 
     /**
-     * show all the halls by paging
+     * 分页查询堂列表
      * @param page
      * @param numOfPage
      * @param querykey
@@ -50,6 +49,7 @@ public class HallAction {
      * @param endtime
      * @return
      */
+
     @RequestMapping(value = "/halls/{page}/to/{numOfPage}" , method = RequestMethod.GET)
     @ResponseBody
     public RetResponse showHalls(@PathVariable("page") int page ,
@@ -70,7 +70,25 @@ public class HallAction {
             if(!StringUtils.isEmpty(endtime)){
                 end_time = sdf.parse(endtime);
             }
-            result = hallService.getHallList(page , numOfPage , querykey , queryvalue , start_time , end_time);
+            result = hallService.getHallList(page, numOfPage, querykey, queryvalue, start_time, end_time);
+        }catch (Exception e){
+            result.setStatus(ReturnStatus.FAIL);
+            result.setRetMsg(e.getMessage());
+        }
+        return result;
+    }
+
+    /**
+     * 更改堂状态(开启、关闭)
+     * @param id    堂id
+     * @return
+     */
+    @RequestMapping(value = "/changestate/{id}" , method = RequestMethod.POST)
+    @ResponseBody
+    public RetResponse changeHallState(@PathVariable("id") int id){
+        RetResponse result = new RetResponse();
+        try {
+            result = hallService.changeHallState(id);
         }catch (Exception e){
             result.setStatus(ReturnStatus.FAIL);
             result.setRetMsg(e.getMessage());

@@ -13,10 +13,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
+ * 广告管理Action
  * Created by lyy on 10/14/15.
- * advertisement management
  */
-
 @RestController
 @RequestMapping("/advertisementinfo")
 public class AdvertisementAction {
@@ -25,7 +24,7 @@ public class AdvertisementAction {
     IAdvertisementService advertisementService;
 
     /**
-     * add a advertisement
+     * 新增一个广告
      * @param paraminfo     代表请求参数，对应AdvertisementAddRequest类
      * @return
      */
@@ -44,7 +43,7 @@ public class AdvertisementAction {
     }
 
     /**
-     * show all the advertisements by paging
+     * 分页查询广告列表
      * @param page  查第几页
      * @param numOfPage 每页多少条记录
      * @return
@@ -77,7 +76,7 @@ public class AdvertisementAction {
     }
 
     /**
-     * show the detail of an advertisement by the parameter id
+     * 根据id查询广告详情页
      * @param id    广告id
      * @return
      */
@@ -95,7 +94,7 @@ public class AdvertisementAction {
     }
 
     /**
-     * delete an advertisement by the parameter id
+     * 根据id删除广告
      * @param id
      * @return
      */
@@ -113,6 +112,7 @@ public class AdvertisementAction {
     }
 
     /**
+     * 根据id更新广告
      * @param id            要更新的广告id
      * @param paraminfo     代表请求参数，对应AdvertisementAddRequest类
      * @return

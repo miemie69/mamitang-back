@@ -12,11 +12,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * 用户查询Action
  * Created by lyy on 15-9-24.
- * show all the users
  */
-
-
 @RestController
 @RequestMapping(value = "/userinfo")
 public class ShowUserAction {
@@ -39,7 +37,6 @@ public class ShowUserAction {
         }
         return result;
     }
-
 
     @RequestMapping(value = "/user/{id}" , method = RequestMethod.GET)
     @ResponseBody

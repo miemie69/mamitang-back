@@ -11,9 +11,9 @@ import java.util.Map;
  */
 public interface IUserService {
 
-    UserEntity login(String userName, String passWord);
+    UserEntity login(String userName, String passWord) throws Exception;
 
-    RetResponse register(UserRegisterDTO request_info);
+    RetResponse register(UserRegisterDTO request_info) throws Exception;
 
     RetResponse getAllUsers(int num, int numOfPage, String querykey, String queryvalue);
 

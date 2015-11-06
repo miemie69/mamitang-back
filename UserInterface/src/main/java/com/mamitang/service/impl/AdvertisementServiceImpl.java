@@ -33,7 +33,7 @@ public class AdvertisementServiceImpl implements IAdvertisementService {
         RetResponse result = new RetResponse();
         if(StringUtils.isEmpty(request.getName())){
             result.setStatus(ReturnStatus.FAIL);
-            result.setRetMsg("the name is invalid");
+            result.setRetMsg("广告名不可为空");
             return result;
         }
         AdvertisementEntity advertisement = new AdvertisementEntity();
@@ -43,15 +43,14 @@ public class AdvertisementServiceImpl implements IAdvertisementService {
         int primaryKey = advertisement.getId();
         if(primaryKey<0){
             result.setStatus(ReturnStatus.FAIL);
-            result.setRetMsg("the name is invalid");
+            result.setRetMsg("发布广告失败");
             return result;
         }
-        //上传图片不为空
+        //判断上传图片是否为空
         if(request.getImgs() !=null){
             List<Map<String , String>> imgs = request.getImgs();
             for(Map<String , String> map : imgs){
                 //是否处理entry为空的情况?
-
                 ADPictureEntity pictureEntity = new ADPictureEntity();
                 pictureEntity.setAdId(primaryKey);
                 pictureEntity.setPath(map.get("path"));
@@ -59,13 +58,13 @@ public class AdvertisementServiceImpl implements IAdvertisementService {
                 int flag = adpictureDao.insert(pictureEntity);
                 if(flag<0){
                     result.setStatus(ReturnStatus.FAIL);
-                    result.setRetMsg("save the img failed");
+                    result.setRetMsg("保存图片失败");
                     return result;
                 }
             }
         }
         result.setStatus(ReturnStatus.SUCCESS);
-        result.setRetMsg("发布广告成功！");
+        result.setRetMsg("发布广告成功");
         return result;
     }
 
@@ -73,15 +72,15 @@ public class AdvertisementServiceImpl implements IAdvertisementService {
         RetResponse result = new RetResponse();
         if(id<0){
             result.setStatus(ReturnStatus.FAIL);
-            result.setRetMsg("the parameter id is invalid");
+            result.setRetMsg("广告id值无效");
             return result;
         }
         //获取指定id的AdvertisementEntity
         AdvertisementEntity advertisementEntity = advertisementDao.selectByPrimaryKey(id);
-        //判空
+        //判断是否为空
         if(advertisementEntity==null){
             result.setStatus(ReturnStatus.FAIL);
-            result.setRetMsg("the advertisement is not existed");
+            result.setRetMsg("该广告不存在");
             return result;
         }
         AdvertisementDetail detail = new AdvertisementDetail();
@@ -89,6 +88,7 @@ public class AdvertisementServiceImpl implements IAdvertisementService {
         detail.setPublishtime(advertisementEntity.getPublishtime());
         //获取关联的图片信息
         List<ADPictureEntity> list = adpictureDao.getImgsByAID(advertisementEntity.getId());
+        //判断该广告下是否有图片信息
         if(list.size()!=0){
             Map<String , String> imgs = new HashMap<String, String>();
             for(ADPictureEntity entity : list){
@@ -98,7 +98,6 @@ public class AdvertisementServiceImpl implements IAdvertisementService {
         }
         result.setData(detail);
         result.setStatus(ReturnStatus.SUCCESS);
-        result.setRetMsg("发布广告成功");
         return result;
     }
 
@@ -112,7 +111,7 @@ public class AdvertisementServiceImpl implements IAdvertisementService {
     public RetResponse getAdvertisementList(int page, int numOfPage, String name, Date starttime, Date endtime) {
         RetResponse result = new RetResponse();
         if(page<=0 || numOfPage<1){
-            result.setRetMsg("the error parameters");
+            result.setRetMsg("页码参数错误");
             result.setStatus(ReturnStatus.FAIL);
             return result;
         }
@@ -126,6 +125,7 @@ public class AdvertisementServiceImpl implements IAdvertisementService {
         sql_map.put("start" , start);
         sql_map.put("end" , numOfPage);
         sql_map.put("name" , name);
+        //根据时间条件查询
         sql_map.put("starttime" , starttime);
         sql_map.put("endtime" , endtime);
 
@@ -141,7 +141,6 @@ public class AdvertisementServiceImpl implements IAdvertisementService {
         Map result_map = new HashMap();
         result_map.put("countOfPage", countOfPage);
         result_map.put("currentList", list);
-
         result.setData(result_map);
         result.setStatus(ReturnStatus.SUCCESS);
         return result;
@@ -153,25 +152,26 @@ public class AdvertisementServiceImpl implements IAdvertisementService {
      */
     public RetResponse deleteAdvertisement(int id) {
         RetResponse result = new RetResponse();
+        int effectRow;
         if(id<0){
             result.setStatus(ReturnStatus.FAIL);
-            result.setRetMsg("the parameter id is invalid");
+            result.setRetMsg("广告id值无效");
             return result;
         }
-        int i = adpictureDao.deleteByAdId(id);
-        if(i<0){
-            result.setRetMsg("删除失败");
+        effectRow = adpictureDao.deleteByAdId(id);
+        if(effectRow<0){
+            result.setRetMsg("广告删除失败");
             result.setStatus(ReturnStatus.FAIL);
             return result;
         }
-        int j = advertisementDao.deleteByPrimaryKey(id);
-        if(j<0){
-            result.setRetMsg("删除失败");
+        effectRow = advertisementDao.deleteByPrimaryKey(id);
+        if(effectRow<0){
+            result.setRetMsg("广告删除失败");
             result.setStatus(ReturnStatus.FAIL);
             return result;
         }
         result.setStatus(ReturnStatus.SUCCESS);
-        result.setRetMsg("删除成功");
+        result.setRetMsg("广告删除成功");
         return result;
     }
 
@@ -182,17 +182,18 @@ public class AdvertisementServiceImpl implements IAdvertisementService {
      */
     public RetResponse updateAdvertisement(int id, AdvertisementAddRequest request_info) {
         RetResponse result = new RetResponse();
+        int effectRow;
         if(id<0){
             result.setStatus(ReturnStatus.FAIL);
-            result.setRetMsg("the parameter id is invalid");
+            result.setRetMsg("广告id值无效");
             return result;
         }
         AdvertisementEntity new_ad = new AdvertisementEntity();
         new_ad.setId(id);
         new_ad.setName(request_info.getName());
-        int i = advertisementDao.updateByPrimaryKeySelective(new_ad);
-        if(i<0){
-            result.setRetMsg("更新失败");
+        effectRow = advertisementDao.updateByPrimaryKeySelective(new_ad);
+        if(effectRow<0){
+            result.setRetMsg("广告更新失败");
             result.setStatus(ReturnStatus.FAIL);
             return result;
         }
@@ -206,14 +207,14 @@ public class AdvertisementServiceImpl implements IAdvertisementService {
                 new_adp.setDescription(map.get("description"));
                 int flag = adpictureDao.updateByPrimaryKeySelective(new_adp);
                 if(flag<0){
-                    result.setRetMsg("更新失败");
+                    result.setRetMsg("广告更新失败");
                     result.setStatus(ReturnStatus.FAIL);
                     return result;
                 }
             }
         }
         result.setStatus(ReturnStatus.SUCCESS);
-        result.setRetMsg("更新成功");
+        result.setRetMsg("广告更新成功");
         return result;
     }
 }
